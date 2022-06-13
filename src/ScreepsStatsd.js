@@ -21,47 +21,23 @@ import zlib from 'zlib';
 
 export default class ScreepsStatsd {
   _host;
-  _email;
-  _password;
+  _token;
   _shard;
   _graphite;
-  _token;
   _success;
-  constructor(host, email, password, shard, graphite) {
+  constructor(host, token, shard, graphite) {
     this._host = host;
-    this._email = email;
-    this._password = password;
+    this._token = token;
     this._shard = shard;
     this._graphite = graphite;
     this._client = new StatsD({host: this._graphite});
   }
   run( string ) {
-    this.signin();
-
     setInterval(() => this.loop(), 15000);
   }
 
   loop() {
     this.getMemory();
-  }
-
-  async signin() {
-    if(this.token) {
-      return;
-    }
-    console.log("New login request -", new Date());
-    const response = await fetch(this._host + '/api/auth/signin', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: this._email,
-        password: this._password
-      }),
-      headers: {
-        'content-type': 'application/json'
-      }
-    });
-    const data = await response.json();
-    this._token = data.token;
   }
 
   async getMemory() {
@@ -72,19 +48,16 @@ export default class ScreepsStatsd {
         method: 'GET',
         headers: {
           "X-Token": this._token,
-          "X-Username": this._token,
           'content-type': 'application/json',
         }
       });
       const data = await response.json();
       
-      this._token = response.headers['x-token'];
       if (!data?.data || data.error) throw new Error(data?.error ?? 'No data');
       const unzippedData = JSON.parse(zlib.gunzipSync(Buffer.from(data.data.split('gz:')[1], 'base64')).toString())
       this.report(unzippedData);
     } catch (e) {
       console.error(e);
-      this._token = undefined;
     }
   }
 
