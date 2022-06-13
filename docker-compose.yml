@@ -6,7 +6,7 @@ volumes:
 services:
   node:
     build:
-        context: .
+        context: docker/
         dockerfile: docker/Dockerfile
     restart: always
     links:

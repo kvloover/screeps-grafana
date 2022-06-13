@@ -1,7 +1,7 @@
 FROM node:lts
 
 WORKDIR /app
-COPY /docker /app
+COPY . /app
 RUN npm install
 # ENV SCREEPS_HOST=https://screeps.com
 
