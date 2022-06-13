@@ -42,8 +42,6 @@ export default class ScreepsStatsd {
 
   async getMemory() {
     try {
-      await this.signin();
-
       const response = await fetch(this._host + `/api/user/memory?path=stats&shard=${this._shard}`, {
         method: 'GET',
         headers: {
