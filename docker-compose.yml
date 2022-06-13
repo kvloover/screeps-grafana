@@ -7,7 +7,7 @@ services:
   node:
     build:
         context: .
-        dockerfile: Dockerfile
+        dockerfile: docker/Dockerfile
     restart: always
     links:
      - statsd
