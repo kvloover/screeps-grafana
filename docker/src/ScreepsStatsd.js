@@ -33,7 +33,7 @@ export default class ScreepsStatsd {
     this._client = new StatsD({host: this._graphite});
   }
   run( string ) {
-    setInterval(() => this.loop(), 15000);
+    setInterval(() => this.loop(), 60000);
   }
 
   loop() {
